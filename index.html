@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Finanças Fácil</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+        defer
+    ></script>
+
+    <script
+        src="script.js"
+        defer
+    ></script>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- CABEÇALHO -->
+
+        <header class="header">
+
+            <div>
+                <h1>Finanças Fácil</h1>
+                <p>Controle suas finanças de forma simples.</p>
+            </div>
+
+        </header>
+
+
+        <!-- CARDS -->
+
+        <section class="cards">
+
+            <div class="card receita">
+                <span>Receitas</span>
+                <strong id="totalReceitas">
+                    R$ 0,00
+                </strong>
+            </div>
+
+            <div class="card despesa">
+                <span>Despesas</span>
+                <strong id="totalDespesas">
+                    R$ 0,00
+                </strong>
+            </div>
+
+            <div class="card saldo">
+                <span>Saldo</span>
+                <strong id="saldo">
+                    R$ 0,00
+                </strong>
+            </div>
+
+        </section>
+
+
+        <!-- FORMULÁRIO -->
+
+        <section class="panel">
+
+            <div class="panel-title">
+                <h2>Nova transação</h2>
+            </div>
+
+            <form id="financialForm">
+
+                <div class="form-group">
+
+                    <label for="descricao">
+                        Descrição
+                    </label>
+
+                    <input
+                        type="text"
+                        id="descricao"
+                        placeholder="Ex.: Salário"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="valor">
+                        Valor
+                    </label>
+
+                    <input
+                        type="number"
+                        id="valor"
+                        placeholder="0,00"
+                        step="0.01"
+                        min="0.01"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="tipo">
+                        Tipo
+                    </label>
+
+                    <select id="tipo" required>
+
+                        <option value="receita">
+                            Receita
+                        </option>
+
+                        <option value="despesa">
+                            Despesa
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="categoria">
+                        Categoria
+                    </label>
+
+                    <select id="categoria" required>
+
+                        <option value="alimentação">
+                            Alimentação
+                        </option>
+
+                        <option value="transporte">
+                            Transporte
+                        </option>
+
+                        <option value="moradia">
+                            Moradia
+                        </option>
+
+                        <option value="lazer">
+                            Lazer
+                        </option>
+
+                        <option value="saúde">
+                            Saúde
+                        </option>
+
+                        <option value="educação">
+                            Educação
+                        </option>
+
+                        <option value="outros">
+                            Outros
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Adicionar transação
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- CONTEÚDO -->
+
+        <section class="content-grid">
+
+            <!-- TABELA -->
+
+            <div class="panel transactions">
+
+                <div class="panel-title">
+
+                    <h2>Transações</h2>
+
+                    <select id="filtroTipo">
+
+                        <option value="todos">
+                            Todas
+                        </option>
+
+                        <option value="receita">
+                            Receitas
+                        </option>
+
+                        <option value="despesa">
+                            Despesas
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="transacoesBody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+            <!-- GRÁFICO -->
+
+            <div class="panel chart-panel">
+
+                <div class="panel-title">
+
+                    <h2>Despesas por categoria</h2>
+
+                </div>
+
+                <div class="chart-container">
+
+                    <canvas id="graficoDespesas"></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- MODAL DE EDIÇÃO -->
+
+    <div
+        id="modal"
+        class="modal hidden"
+    >
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2>Editar transação</h2>
+
+                <button
+                    id="fecharModal"
+                    class="close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="editForm">
+
+                <input
+                    type="hidden"
+                    id="editId"
+                >
+
+                <div class="form-group">
+
+                    <label>
+                        Descrição
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editDescricao"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Valor
+                    </label>
+
+                    <input
+                        type="number"
+                        id="editValor"
+                        step="0.01"
+                        min="0.01"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Tipo
+                    </label>
+
+                    <select id="editTipo">
+
+                        <option value="receita">
+                            Receita
+                        </option>
+
+                        <option value="despesa">
+                            Despesa
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Categoria
+                    </label>
+
+                    <select id="editCategoria">
+
+                        <option value="alimentação">
+                            Alimentação
+                        </option>
+
+                        <option value="transporte">
+                            Transporte
+                        </option>
+
+                        <option value="moradia">
+                            Moradia
+                        </option>
+
+                        <option value="lazer">
+                            Lazer
+                        </option>
+
+                        <option value="saúde">
+                            Saúde
+                        </option>
+
+                        <option value="educação">
+                            Educação
+                        </option>
+
+                        <option value="outros">
+                            Outros
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Salvar alterações
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

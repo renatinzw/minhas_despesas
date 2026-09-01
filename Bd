@@ -1,0 +1,21 @@
+const Database = require("better-sqlite3");
+
+const db = new Database("backend/financas.db");
+
+// Ativa chaves estrangeiras
+db.pragma("foreign_keys = ON");
+
+// Criação da tabela
+db.exec(`
+    CREATE TABLE IF NOT EXISTS transacoes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        descricao TEXT NOT NULL,
+        valor REAL NOT NULL,
+        tipo TEXT NOT NULL CHECK(tipo IN ('receita', 'despesa')),
+        categoria TEXT NOT NULL,
+        data TEXT NOT NULL,
+        criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+`);
+
+module.exports = db;

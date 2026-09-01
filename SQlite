@@ -1,0 +1,218 @@
+const express = require("express");
+const path = require("path");
+const db = require("./database");
+
+const app = express();
+const PORT = 3000;
+
+// Permite receber JSON
+app.use(express.json());
+
+// Arquivos do frontend
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+/*
+|--------------------------------------------------------------------------
+| LISTAR TRANSAÇÕES
+|--------------------------------------------------------------------------
+*/
+app.get("/api/transacoes", (req, res) => {
+    try {
+        const transacoes = db
+            .prepare(`
+                SELECT *
+                FROM transacoes
+                ORDER BY id DESC
+            `)
+            .all();
+
+        res.json(transacoes);
+    } catch (error) {
+        res.status(500).json({
+            erro: "Erro ao buscar transações."
+        });
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| ADICIONAR TRANSAÇÃO
+|--------------------------------------------------------------------------
+*/
+app.post("/api/transacoes", (req, res) => {
+    try {
+        const {
+            descricao,
+            valor,
+            tipo,
+            categoria
+        } = req.body;
+
+        if (!descricao || !valor || !tipo || !categoria) {
+            return res.status(400).json({
+                erro: "Preencha todos os campos."
+            });
+        }
+
+        if (!["receita", "despesa"].includes(tipo)) {
+            return res.status(400).json({
+                erro: "Tipo de transação inválido."
+            });
+        }
+
+        if (Number(valor) <= 0) {
+            return res.status(400).json({
+                erro: "O valor deve ser maior que zero."
+            });
+        }
+
+        const data = new Date().toISOString();
+
+        const resultado = db
+            .prepare(`
+                INSERT INTO transacoes
+                (descricao, valor, tipo, categoria, data)
+                VALUES (?, ?, ?, ?, ?)
+            `)
+            .run(
+                descricao.trim(),
+                Number(valor),
+                tipo,
+                categoria,
+                data
+            );
+
+        const novaTransacao = db
+            .prepare(`
+                SELECT *
+                FROM transacoes
+                WHERE id = ?
+            `)
+            .get(resultado.lastInsertRowid);
+
+        res.status(201).json(novaTransacao);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            erro: "Erro ao adicionar transação."
+        });
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| EXCLUIR TRANSAÇÃO
+|--------------------------------------------------------------------------
+*/
+app.delete("/api/transacoes/:id", (req, res) => {
+    try {
+        const id = Number(req.params.id);
+
+        const resultado = db
+            .prepare(`
+                DELETE FROM transacoes
+                WHERE id = ?
+            `)
+            .run(id);
+
+        if (resultado.changes === 0) {
+            return res.status(404).json({
+                erro: "Transação não encontrada."
+            });
+        }
+
+        res.json({
+            mensagem: "Transação excluída com sucesso."
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            erro: "Erro ao excluir transação."
+        });
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| ATUALIZAR TRANSAÇÃO
+|--------------------------------------------------------------------------
+*/
+app.put("/api/transacoes/:id", (req, res) => {
+    try {
+        const id = Number(req.params.id);
+
+        const {
+            descricao,
+            valor,
+            tipo,
+            categoria
+        } = req.body;
+
+        if (!descricao || !valor || !tipo || !categoria) {
+            return res.status(400).json({
+                erro: "Preencha todos os campos."
+            });
+        }
+
+        const resultado = db
+            .prepare(`
+                UPDATE transacoes
+                SET
+                    descricao = ?,
+                    valor = ?,
+                    tipo = ?,
+                    categoria = ?
+                WHERE id = ?
+            `)
+            .run(
+                descricao.trim(),
+                Number(valor),
+                tipo,
+                categoria,
+                id
+            );
+
+        if (resultado.changes === 0) {
+            return res.status(404).json({
+                erro: "Transação não encontrada."
+            });
+        }
+
+        const transacao = db
+            .prepare(`
+                SELECT *
+                FROM transacoes
+                WHERE id = ?
+            `)
+            .get(id);
+
+        res.json(transacao);
+
+    } catch (error) {
+        res.status(500).json({
+            erro: "Erro ao atualizar transação."
+        });
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
+| INICIAR SERVIDOR
+|--------------------------------------------------------------------------
+*/
+app.listen(PORT, () => {
+    console.log(`
+========================================
+       FINANÇAS FÁCIL
+========================================
+
+Servidor rodando em:
+
+http://localhost:${PORT}
+
+Banco: SQLite
+Arquivo: backend/financas.db
+`);
+});

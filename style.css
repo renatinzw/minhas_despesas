@@ -1,0 +1,366 @@
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+
+/* =========================================
+   APLICAÇÃO
+========================================= */
+
+.app {
+    width: min(1200px, 94%);
+    margin: 0 auto;
+    padding: 30px 0 50px;
+}
+
+
+/* =========================================
+   CABEÇALHO
+========================================= */
+
+.header {
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 32px;
+    color: #0f172a;
+}
+
+.header p {
+    margin-top: 6px;
+    color: #64748b;
+}
+
+
+/* =========================================
+   CARDS
+========================================= */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+    border-left: 5px solid;
+}
+
+.card span {
+    display: block;
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.card strong {
+    font-size: 25px;
+}
+
+.card.receita {
+    border-color: #16a34a;
+}
+
+.card.receita strong {
+    color: #16a34a;
+}
+
+.card.despesa {
+    border-color: #dc2626;
+}
+
+.card.despesa strong {
+    color: #dc2626;
+}
+
+.card.saldo {
+    border-color: #2563eb;
+}
+
+.card.saldo strong {
+    color: #2563eb;
+}
+
+
+/* =========================================
+   PAINÉIS
+========================================= */
+
+.panel {
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.06);
+}
+
+.panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.panel-title h2 {
+    font-size: 20px;
+}
+
+
+/* =========================================
+   FORMULÁRIOS
+========================================= */
+
+#financialForm {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #475569;
+}
+
+.form-group input,
+.form-group select,
+.panel-title select {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 11px;
+    outline: none;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.panel-title select:focus {
+    border-color: #2563eb;
+}
+
+
+/* =========================================
+   BOTÕES
+========================================= */
+
+.btn-primary {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 18px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-edit,
+.btn-delete {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 10px;
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.btn-edit {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+
+/* =========================================
+   GRID DE CONTEÚDO
+========================================= */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 25px;
+}
+
+
+/* =========================================
+   TABELA
+========================================= */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 13px;
+}
+
+th,
+td {
+    padding: 13px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+td {
+    font-size: 14px;
+}
+
+.valor-receita {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.valor-despesa {
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.tipo {
+    text-transform: capitalize;
+}
+
+
+/* =========================================
+   GRÁFICO
+========================================= */
+
+.chart-container {
+    height: 320px;
+    position: relative;
+}
+
+
+/* =========================================
+   MODAL
+========================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    width: min(500px, 100%);
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.close {
+    border: none;
+    background: transparent;
+    font-size: 30px;
+    cursor: pointer;
+    color: #64748b;
+}
+
+#editForm {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 1000px) {
+
+    #financialForm {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 700px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    #financialForm {
+        grid-template-columns: 1fr;
+    }
+
+    .app {
+        width: 92%;
+        padding-top: 20px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+    }
+
+    .panel {
+        padding: 18px;
+    }
+}
